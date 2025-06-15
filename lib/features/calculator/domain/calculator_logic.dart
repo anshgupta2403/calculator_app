@@ -22,10 +22,11 @@ class CalculatorLogic {
   String evaluate(String expr) {
     try {
       expr = expr.replaceAll('×', '*').replaceAll('÷', '/');
-      Parser p = Parser();
+      ExpressionParser p = GrammarParser();
       Expression exp = p.parse(expr);
-      ContextModel cm = ContextModel();
-      double eval = exp.evaluate(EvaluationType.REAL, cm);
+      ContextModel context = ContextModel();
+      RealEvaluator evaluator = RealEvaluator(context);
+      double eval = evaluator.evaluate(exp) as double;
       return eval.toString();
     } catch (e) {
       return 'Error';

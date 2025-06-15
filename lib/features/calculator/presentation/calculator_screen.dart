@@ -19,10 +19,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   final List<dynamic> history = [];
   bool _justEvaluated = false;
   final CalculatorLogic _calcLogic = CalculatorLogic();
+  late double screenWidth;
+  late double screenHeight;
+  late double textScale;
+  bool lastExpressionContainsError = false;
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    screenWidth = MediaQuery.of(context).size.width;
+    screenHeight = MediaQuery.of(context).size.height;
+    textScale = screenWidth / 400; // 400 is a base design width
 
     return Scaffold(
       body: SafeArea(
@@ -30,8 +37,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           children: [
             Center(
               child: Container(
-                width: 120,
-                padding: const EdgeInsets.all(4),
+                width: 120 * textScale,
+                padding: EdgeInsets.all(4 * textScale),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(15),
@@ -59,15 +66,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 itemCount: history.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 2,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16 * textScale,
+                      vertical: 2 * textScale,
                     ),
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
                         history[index],
-                        style: TextStyle(color: Colors.grey[500], fontSize: 16),
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 16 * textScale,
+                        ),
                       ),
                     ),
                   );
@@ -75,13 +85,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+              padding: EdgeInsets.fromLTRB(
+                16 * textScale,
+                8 * textScale,
+                16 * textScale,
+                4 * textScale,
+              ),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
                   displayText,
                   style: TextStyle(
-                    fontSize: _justEvaluated ? 28 : 36,
+                    fontSize: (_justEvaluated ? 28 : 36) * textScale,
                     fontWeight: _justEvaluated
                         ? FontWeight.normal
                         : FontWeight.bold,
@@ -92,13 +107,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             ),
             if (result.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 2, 16, 16),
+                padding: EdgeInsets.fromLTRB(
+                  16 * textScale,
+                  2 * textScale,
+                  16 * textScale,
+                  16 * textScale,
+                ),
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
                     result,
                     style: TextStyle(
-                      fontSize: _justEvaluated ? 36 : 28,
+                      fontSize: (_justEvaluated ? 36 : 28) * textScale,
                       fontWeight: _justEvaluated
                           ? FontWeight.bold
                           : FontWeight.normal,
@@ -107,12 +127,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 ),
               ),
             SizedBox(
-              height: MediaQuery.of(context).size.height / 2 + 100,
+              height: screenHeight * 0.57,
               child: GridView.count(
                 crossAxisCount: 4,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                padding: const EdgeInsets.all(8),
+                mainAxisSpacing: 8 * textScale,
+                crossAxisSpacing: 8 * textScale,
+                padding: EdgeInsets.all(8 * textScale),
                 children: [
                   calculatorButton('AC'),
                   calculatorButton('C'),
@@ -167,13 +187,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return ElevatedButton(
       onPressed: () => onPressedBtn(text),
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24 * textScale),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 24 * textScale,
           color: digitsAndDot.contains(text) ? Colors.black : Colors.orange,
         ),
       ),
@@ -190,8 +210,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           history.insert(0, '');
         }
         _justEvaluated = false;
-        displayText = result.substring(2);
-        result = '';
+        if (!lastExpressionContainsError) {
+          displayText = result.substring(2);
+          result = '';
+        } else {
+          lastExpressionContainsError = false;
+          displayText = '';
+          result = '';
+        }
       }
 
       if (value == 'C') {
@@ -212,13 +238,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           setState(() {
             _justEvaluated = true;
           });
+        } else {
+          setState(() {
+            _justEvaluated = true;
+          });
         }
       } else {
         if (operators.contains(value)) {
           if (displayText.isEmpty) {
-            if (value == '-') {
-              displayText += value;
-            }
+            displayText += '0$value';
           } else {
             String last = displayText[displayText.length - 1];
             if (!operators.contains(last)) {
@@ -238,10 +266,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       if (_calcLogic.isValidExpression(displayText)) {
         String eval = _calcLogic.evaluate(displayText);
         result = eval != 'Error' ? '= $eval' : '';
+        if (result.contains("Infinity") || result.contains("NaN")) {
+          result = '= Can\'t divide by zero';
+          lastExpressionContainsError = true;
+        }
       } else {
-        result = displayText.isNotEmpty
-            ? '= ${displayText.substring(0, displayText.length - 1)}'
-            : '';
+        if (result.isEmpty) {
+          result = displayText.isNotEmpty
+              ? '= ${displayText.substring(0, displayText.length - 1)}'
+              : '';
+        }
       }
     });
   }
