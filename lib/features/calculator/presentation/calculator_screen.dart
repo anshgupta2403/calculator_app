@@ -1,6 +1,5 @@
 import 'package:calculator_app/features/calculator/domain/calculator_logic.dart';
 import 'package:flutter/material.dart';
-import 'package:math_expressions/math_expressions.dart';
 import 'package:provider/provider.dart';
 import 'package:calculator_app/provider/theme_provider.dart';
 
@@ -266,7 +265,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       if (_calcLogic.isValidExpression(displayText)) {
         String eval = _calcLogic.evaluate(displayText);
         result = eval != 'Error' ? '= $eval' : '';
-        if (result.contains("Infinity") || result.contains("NaN")) {
+        if (result.contains('Infinity') || result.contains('NaN')) {
           result = '= Can\'t divide by zero';
           lastExpressionContainsError = true;
         }
