@@ -13,9 +13,9 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.orange[700],
-        backgroundColor: Colors.white
-      )
-    )
+        backgroundColor: Colors.white,
+      ),
+    ),
     // Add other light theme customizations here
   );
 
@@ -31,9 +31,9 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.orange[700],
-        backgroundColor: Colors.grey[100]
-      )
-    )
+        backgroundColor: Colors.grey[100],
+      ),
+    ),
     // Add other dark theme customizations here
   );
 }

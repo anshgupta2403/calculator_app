@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.themeMode,
       debugShowCheckedModeBanner: false,
-      home: CalculatorScreen()
+      home: CalculatorScreen(),
     );
   }
 }
