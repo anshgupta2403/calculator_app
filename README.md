@@ -1,16 +1,57 @@
-# calculator_app
+# Calculator App
 
-A new Flutter project.
+A simple Flutter calculator app that supports basic arithmetic operations with light and dark theme switching.
 
-## Getting Started
+## Prerequisites
 
-This project is a starting point for a Flutter application.
+1. Flutter SDK (Install Flutter https://docs.flutter.dev/get-started/install)
+2. A code editor → VS Code / Android Studio / IntelliJ
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+git clone https://github.com/anshgupta2403/calculator_app.git
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## Features
+
+✅ Basic calculator operations: addition, subtraction, multiplication, division and modulus  
+✅ Responsive design for mobile  
+✅ Switch between dark and light theme  
+✅ Clean and minimal UI
+
+## Theme Support
+
+1. Light Theme: Bright background, dark text.
+2. Dark Theme: Dark background, light text.
+3. You can toggle the theme from the top.
+
+## How to Run
+
+1. cd calculator_app
+2. flutter pub get
+3. flutter run
+
+## Screensshots
+
+### Light Theme
+
+<div align="left">
+
+<table>
+  <tr>
+    <td><img src="screenshots/light_theme.png" width="300" height="600"/></td>
+  </tr>
+</table>
+</div>
+
+
+### Dark Theme
+
+<div align="left">
+
+<table>
+  <tr>
+    <td><img src="screenshots/dark_theme.png" width="300" height="600"/></td>
+  </tr>
+</table>
+</div>
